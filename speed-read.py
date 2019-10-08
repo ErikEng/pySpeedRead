@@ -16,6 +16,7 @@ def spritzText(text, speed, highlight):
 	timeStarted = time.time()
 	splitText = re.findall(r"[\w']+",text)
 	wordCount = 0
+	listOfWords = []
 	for word in splitText:
 		redPos = 0
 		letterReset = 1
@@ -33,35 +34,43 @@ def spritzText(text, speed, highlight):
 		markerPosition = 12
 		if (redPos < markerPosition):
 			spacer = " " * (markerPosition-redPos-1)
-		print "┌──────────┬──────────┐"
-		print spacer + "".join(formattedWord)
-		print "└──────────┴──────────┘"
-		print "Time elapsed: " + str(round(time.time()-timeStarted)) +"s"
+		stringFormatted="".join(formattedWord)
+		print("┌──────────┬──────────┐")
+		print(f" {spacer}{stringFormatted}")
+		print( "└──────────┴──────────┘")
+		print( "Time elapsed: " + str(round(time.time()-timeStarted)) +"s")
+		listOfWords.append(word)
 		if (wordCount == 0):
 			time.sleep(1.5)
 		else:
 			time.sleep(speed)
 		wordCount = wordCount + 1
+	return listOfWords
 
-os.system("clear")
-speed = 0
-file = sys.argv[1]
-if (len(sys.argv) > 2):
-	speed = sys.argv[2]
-if (len(sys.argv) > 3):
-	highlight = sys.argv[3]
-else:
-	highlight = "red"
+def main():
+	os.system("clear")
+	speed = 0
+	file = sys.argv[1]
+	if (len(sys.argv) > 2):
+		speed = sys.argv[2]
+	if (len(sys.argv) > 3):
+		highlight = sys.argv[3]
+	else:
+		highlight = "red"
 
-if (file is None):
-	print "Error: no file found!"
-else:
-	with open(file, "rb") as f:
-		text = f.read().replace('\n',' ')
-		text = str(text).strip()
-		if (speed == 0):
-			speed = raw_input("How many words per minute? ")
-		speed = 1/(float(speed)/60)
-		spritzText(text, speed, highlight)
+	if (file is None):
+		print( "Error: no file found!")
+	else:
+		with open(file, "r") as f:
+			text = f.read() #.replace('\n',' ')
+			text = str(text).strip()
+			if (speed == 0):
+				speed = raw_input("How many words per minute? ")
+			speed = 1/(float(speed)/60)
+			listu = spritzText(text, speed, highlight)
 
-exit()
+	# print(listOfWords)
+	print(listu)
+	exit()
+
+main()
